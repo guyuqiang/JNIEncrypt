@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--build.xml中的第一句话，没有实际的意义-->
+<!--project 用于定义一个ant工程，其中的三项name、default、basedir缺一不可。
+作用分别为：定义工程名、制定默认执行的任务、以及工程基础的路径型(它是计算其它路径的基础，一般情况下使用.表示当前目录)-->
+<project name="JsaasUtil_jar" default="jar" basedir=".">
+    <description>make JsaasUtil jar</description> <!--描述，个人觉得就是一提示作用，没什么实际用途-->
+    <property name="java" value="src/com" /><!--定义源文件路径，其中的value换成location也行，使用value的时候，${src}得到的就是src这个值，如果使用location，得到的是src这个目录的绝对路径-->
+    <property name="classes" value="target/classes" /><!--编译后class文件存放的地方-->
+    <property name="jar_dir_name" value="target/classes/com/redxun/sys/core/util/jec-core.jar" /> <!--我们要生成的jar包-->
+    <property name="lib.dir" value="X:/workspace/my/eip/eip-web/target/eip-web/WEB-INF/lib"/> <!--其他引用的jar包存放的位置-->
+
+    <!--创建任务init，负责初始化一些条件-->
+    <target name="init">
+        <delete file="${classes}/com/redxun/sys/core/util/JsaasUtil.class" /><!--删掉原有文件夹-->
+        <!--<mkdir dir="${classes}" />&lt;!&ndash;重新生成文件夹&ndash;&gt;-->
+        <delete file="${jar_dir_name}" /><!--删除旧的jar包-->
+    </target>
+
+    <!--设置classpath,配置引用的jar-->
+    <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!--创建编译任务，名字是compile,depends指定了comiple任务依赖init任务-->
+    <target name="compile" depends="init" description="comile target">
+        <!--javac，编译，对应java中的javac命令-->
+        <!--srcdir定义源文件路径-->
+        <!--destdir定义编译后文件路径-->
+        <!--includeantruntime作用是指定编译任务是否包含ant的classpath,可有可无，不影响编译-->
+        <!--debug 设置为true 会把源文件的属性信息如源文件名称写入class文件  ; 如果为false以后log4j日志输出引用类名会找不到变成?号-->
+        <!--includes指定哪些文件，没有includes则是所有文件-->
+        <javac srcdir="${java}" destdir="${classes}" debug="true" includes="**/*.java" includeantruntime="true">
+            <classpath refid="classpath"/>    <!--前面已经配置的classpath,引入依赖的jar-->
+        </javac>
+        <!--<copy todir="${classes}">&lt;!&ndash;把src源文件目录下的配置文件 , 复制到编译后的目录中&ndash;&gt;-->
+        <!--    <fileset dir="${java}">-->
+        <!--        <include name="**/*.xml"/>-->
+        <!--        <include name="**/*.properties"/>-->
+        <!--    </fileset>-->
+        <!--</copy>-->
+    </target>
+
+    <!-- 加密 -->
+    <!--<target name="encrypt" depends="compile" description="encrypt javaclass">-->
+    <!--    <java classname="X:/workspace/my/JNIEncrypt/${classes}/com/mykj/encrypt/Encrypt" failonerror="true">-->
+    <!--    </java>-->
+    <!--</target>-->
+
+    <!--打包开始，名字为jar，依赖任务为compile-->
+    <target name="jar" depends="init"  description="make jar file">
+        <jar jarfile="${jar_dir_name}" basedir="${classes}"><!--jar操作，jarfile指定jar包存放路径，basedir为编译后的class的目录-->
+            <!--为jar包指定manifest，当然，如果jar包不需要打成runnable的形式，manifest可以不要-->
+            <!--<manifest>-->
+            <!--    &lt;!&ndash;指定main-class&ndash;&gt;-->
+            <!--    <attribute name="Main-Class" value="com.sunstar.coupon.monitor.JDMessageMonitor" />&lt;!&ndash;java -jar sunstar-coupon-1.0.jar  默认执行com.sunstar.coupon.monitor.JDMessageMonitor.main方法&ndash;&gt;-->
+            <!--    &lt;!&ndash;指定Class-Path&ndash;&gt;-->
+            <!--    &lt;!&ndash;<attribute name="Class-Path" value="${libs}">&ndash;&gt;-->
+            <!--    &lt;!&ndash;</attribute>&ndash;&gt;-->
+            <!--</manifest>-->
+        </jar>
+    </target>
+</project>
