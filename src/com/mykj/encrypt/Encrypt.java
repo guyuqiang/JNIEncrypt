@@ -54,7 +54,7 @@ public class Encrypt extends ClassLoader {
      * 解密方法
      * @param className 需要解密的文件名
      */
-    protected Class decryptClass(String className) {
+    protected byte[] decryptClass(String className) {
         String packageName=className.replace(".", "/");
         String classPath = getClassPath();
         // 为待加密的文件创建File对象
@@ -91,16 +91,17 @@ public class Encrypt extends ClassLoader {
                 e.printStackTrace();
             }
         }
-        Class c = this.defineClass(className,result,0,result.length);
-        Method method = null;
-        try {
-            method = BeanUtil.getMethod(c, "test", null);
-            Object object = c.newInstance();
-            Object back = method.invoke(object, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return c;
+        return result;
+        //Class c = this.defineClass(className,result,0,result.length);
+        //Method method = null;
+        //try {
+        //    method = BeanUtil.getMethod(c, "test", null);
+        //    Object object = c.newInstance();
+        //    Object back = method.invoke(object, null);
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
+        //return c;
     }
 
     private static String  getClassPath(){
@@ -116,6 +117,6 @@ public class Encrypt extends ClassLoader {
     public static void main(String[] args) {
         Encrypt encrypt = new Encrypt();
         //encrypt.encryptClass("X:\\workspace\\my\\JNIEncrypt\\target\\classes\\com\\redxun\\sys\\core\\util\\JsaasUtil.class");
-        Class c = encrypt.decryptClass("com.redxun.sys.core.util.JsaasUtil");
+        //Class c = encrypt.decryptClass("com.redxun.sys.core.util.JsaasUtil");
     }
 }
