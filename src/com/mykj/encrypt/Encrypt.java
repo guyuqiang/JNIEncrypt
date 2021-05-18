@@ -2,10 +2,7 @@
 package com.mykj.encrypt;
 
 
-import com.redxun.core.util.BeanUtil;
-
 import java.io.*;
-import java.lang.reflect.Method;
 
 /**
  * Auther: guyuqiang  <br/>
@@ -14,8 +11,7 @@ import java.lang.reflect.Method;
  */
 public class Encrypt extends ClassLoader {
 
-    // 装加密后的Class文件的目录名
-    private String encryptFolderName = "encrypt";
+    private char [] password = {'M','y','k','j','2','0','2','1'};
 
     /**
      * 加密方法
@@ -41,8 +37,10 @@ public class Encrypt extends ClassLoader {
 
             // 加密
             int data;
+            int i=0;
             while ((data = bis.read()) != -1) {
-                bos.write(data ^ 0xFF);
+                bos.write(data ^ password[i%password.length]);
+                i++;
             }
             bos.flush();
         } catch (Exception e) {
@@ -72,8 +70,10 @@ public class Encrypt extends ClassLoader {
             bos = new ByteArrayOutputStream();
             // 解密
             int data;
+            int i=0;
             while ((data = bis.read()) != -1) {
-                bos.write(data ^ 0xFF);
+                bos.write(data ^ password[i%password.length]);
+                i++;
             }
             bos.flush();
             result = bos.toByteArray();
@@ -92,16 +92,6 @@ public class Encrypt extends ClassLoader {
             }
         }
         return result;
-        //Class c = this.defineClass(className,result,0,result.length);
-        //Method method = null;
-        //try {
-        //    method = BeanUtil.getMethod(c, "test", null);
-        //    Object object = c.newInstance();
-        //    Object back = method.invoke(object, null);
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
-        //return c;
     }
 
     private static String  getClassPath(){
@@ -116,7 +106,7 @@ public class Encrypt extends ClassLoader {
     // 测试
     public static void main(String[] args) {
         Encrypt encrypt = new Encrypt();
-        encrypt.encryptClass("X:\\workspace\\my\\JNIEncrypt\\target\\classes\\com\\redxun\\sys\\core\\util\\JsaasUtil.class");
+        //encrypt.encryptClass("X:\\workspace\\my\\JNIEncrypt\\target\\classes\\com\\redxun\\sys\\core\\util\\JsaasUtil.class");
         //Class c = encrypt.decryptClass("com.redxun.sys.core.util.JsaasUtil");
     }
 }
