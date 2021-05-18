@@ -1,7 +1,5 @@
 package com.redxun.sys.core.util;
 
-import com.redxun.core.json.JsonResult;
-
 /**
  * Auther: guyuqiang  <br/>
  * Date: 2021/5/7:17:41  <br/>
@@ -9,7 +7,7 @@ import com.redxun.core.json.JsonResult;
  */
 public class JsaasUtil {
     public void test(){
-        System.out.println("===============");
+        System.out.println("这是一个测试");
     }
 
     public static void main(String[] args) {

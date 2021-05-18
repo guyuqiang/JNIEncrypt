@@ -116,7 +116,7 @@ public class Encrypt extends ClassLoader {
     // 测试
     public static void main(String[] args) {
         Encrypt encrypt = new Encrypt();
-        //encrypt.encryptClass("X:\\workspace\\my\\JNIEncrypt\\target\\classes\\com\\redxun\\sys\\core\\util\\JsaasUtil.class");
+        encrypt.encryptClass("X:\\workspace\\my\\JNIEncrypt\\target\\classes\\com\\redxun\\sys\\core\\util\\JsaasUtil.class");
         //Class c = encrypt.decryptClass("com.redxun.sys.core.util.JsaasUtil");
     }
 }
