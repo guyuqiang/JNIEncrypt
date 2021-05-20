@@ -1,7 +1,5 @@
 package com.mykj.classloader;
 
-import com.redxun.core.exception.LicenseException;
-
 import java.io.File;
 import java.lang.reflect.Method;
 
@@ -29,7 +27,7 @@ public class ClassLoadUtil extends ClassLoader{
     }
 
     //natice关键字.标记这个接口,看起来像是abstract
-    private static native byte [] decryptClass(String classFilePath);
+    private static native Class decryptClass(String classFilePath,String className,Object loader);
 
     private static String  getClassPath(){
         String classPath = ClassLoadUtil.class.getResource("/").getPath() ;
@@ -39,54 +37,37 @@ public class ClassLoadUtil extends ClassLoader{
         return classPath;
     }
 
-    public Class getClass(String className){
+    private Class getClass(String className){
         String packageName=className.replace(".", "/");
         //获取class根路径
         String classPath = getClassPath();
         String classFilePath = classPath+packageName;
         //解密class
-        byte [] bytes = decryptClass(classFilePath);
-        Class clazz = defineClass(className,bytes,0,bytes.length);
+        Class clazz = decryptClass(classFilePath,packageName,ClassLoadUtil.class.getClassLoader());
         return clazz;
     }
 
-    public  Object execute(String className, String methodName, Object... parameters) throws Exception{
+    public  Object execute(String className, String methodName, Object... parameters){
         Class<?> cls = getClass(className);
-        Object object  = cls.newInstance();
-        Object result=null;
-
+        Object result;
         try {
-
             Method method =getMethod(cls, methodName, parameters);
-            result= method.invoke(object, parameters);
-
+            result= method.invoke(cls.newInstance(), parameters);
         } catch (Exception e) {
-            e.printStackTrace();
-            Throwable cause = e.getCause();
-            if (cause instanceof LicenseException) {
-                cause.printStackTrace();
-                return "Error:" + cause.getMessage();
-            }
-
+            return "Error:" + e.getMessage();
         }
-
         return result;
     }
 
-    public  Method getMethod(Class<?> cls, String methodName, Object[] parameters) throws NoSuchMethodException {
-        Method[] methods = cls.getDeclaredMethods();
-        Method[] var4 = methods;
-        int var5 = methods.length;
-
-        for(int var6 = 0; var6 < var5; ++var6) {
-            Method method = var4[var6];
+    private  Method getMethod(Class<?> cls, String methodName, Object[] parameters) throws NoSuchMethodException {
+        Method[] methods =cls.getDeclaredMethods();
+        for(Method method:methods){
             Class<?>[] parameterTypes = method.getParameterTypes();
-            int len = parameters == null ? 0 : parameters.length;
-            if (methodName.equals(method.getName()) && parameterTypes.length == len) {
+            int len=parameters==null?0:parameters.length;
+            if(methodName.equals(method.getName()) && parameterTypes.length==len){
                 return method;
             }
         }
-
         throw new NoSuchMethodException();
     }
 

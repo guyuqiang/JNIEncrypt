@@ -12,8 +12,8 @@ extern "C" {
  * Method:    decryptClass
  * Signature: (Ljava/lang/String;)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_com_mykj_classloader_ClassLoadUtil_decryptClass
-  (JNIEnv *env, jclass object, jstring classFilePath);
+JNIEXPORT jclass JNICALL Java_com_mykj_classloader_ClassLoadUtil_decryptClass
+  (JNIEnv *env, jclass object, jstring classFilePath,jstring className,jobject loader);
 
 #ifdef __cplusplus
 }

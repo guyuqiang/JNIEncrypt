@@ -50,7 +50,7 @@
 
     <!--打包开始，名字为jar，依赖任务为compile-->
     <target name="jar" depends="init"  description="make jar file">
-        <jar jarfile="${jar_dir_name}" basedir="${classes}"><!--jar操作，jarfile指定jar包存放路径，basedir为编译后的class的目录-->
+        <jar jarfile="${jar_dir_name}" basedir="${classes}" includes="com/redxun/sys/core/util/*"><!--jar操作，jarfile指定jar包存放路径，basedir为编译后的class的目录-->
             <!--为jar包指定manifest，当然，如果jar包不需要打成runnable的形式，manifest可以不要-->
             <!--<manifest>-->
             <!--    &lt;!&ndash;指定main-class&ndash;&gt;-->
